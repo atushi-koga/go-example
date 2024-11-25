@@ -1,6 +1,3 @@
 # 概要
-未使用なパッケージレベル識別子を検索する静的解析ツール。
-特定のコメントを含むものは、未使用であっても検出対象から除外する。
-
-# 参考
-『非公開』の未使用なパッケージレベル識別子を検索する [gostaticanalysis/unused](https://github.com/gostaticanalysis/unused) をベースに作成した。
+非公開の未使用な識別子を検出する静的解析ツール。
+処理を理解するための[gostaticanalysis/unused](https://github.com/gostaticanalysis/unused) の写経。
