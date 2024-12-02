@@ -1,13 +1,15 @@
-module called
+module github.com/gostaticanalysis/called
 
 go 1.23.3
 
 require (
+	github.com/gostaticanalysis/analysisutil v0.7.1
 	github.com/gostaticanalysis/testutil v0.5.2
 	golang.org/x/tools v0.27.0
 )
 
 require (
+	github.com/gostaticanalysis/comment v1.4.2 // indirect
 	github.com/hashicorp/go-version v1.7.0 // indirect
 	github.com/otiai10/copy v1.14.0 // indirect
 	github.com/tenntenn/modver v1.0.1 // indirect

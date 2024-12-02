@@ -1,8 +1,7 @@
 package main
 
 import (
-	"called"
-
+	"github.com/gostaticanalysis/called"
 	"golang.org/x/tools/go/analysis/unitchecker"
 )
 
