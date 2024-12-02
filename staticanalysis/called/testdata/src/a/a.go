@@ -17,6 +17,9 @@ func main() {
 	//lint:ignore called OK
 	b.Func() // OK
 	//lint:ignore called OK
+	// 除外コメントは検出対象関数の呼び出し箇所の直前行でなくとも機能する
+	b.Func() // OK
+	//lint:ignore called OK
 	f() // OK
 
 	new(b.Type).Method()          // want `\(\*b\.Type\)\.Method must not be called`
