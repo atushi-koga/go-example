@@ -3,14 +3,12 @@ package called_test
 import (
 	"testing"
 
-	"called"
-
-	"github.com/gostaticanalysis/testutil"
+	"github.com/gostaticanalysis/called"
 	"golang.org/x/tools/go/analysis/analysistest"
 )
 
-// TestAnalyzer is a test for Analyzer.
-func TestAnalyzer(t *testing.T) {
-	testdata := testutil.WithModules(t, analysistest.TestData(), nil)
+func Test(t *testing.T) {
+	testdata := analysistest.TestData()
+	defer called.ExportSetFlagFuncs("b.Func,(*b.Type).Method, b/bsub.Type.Method")()
 	analysistest.Run(t, testdata, called.Analyzer, "a")
 }
