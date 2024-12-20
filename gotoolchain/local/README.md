@@ -10,7 +10,7 @@
 ```
 $ go version
 go version go1.21.0 darwin/amd64
-``
+```
 
 ```
 $ go run main.go
