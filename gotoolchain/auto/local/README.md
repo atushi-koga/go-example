@@ -1,12 +1,16 @@
+# 概要
+下記の値を設定してgoコマンドを実行すると、ローカルにインストールしたGoバージョンで実行される。
+
 - GOTOOLCHAIN:auto
 - ローカルにインストールしたGoバージョン:1.23.0
   - `which go`で「1.23.0」であることを確認する
 - go.mod の go directive:1.16
 - go.mod の toolchain directive:go1.22.0
 
-上記の値を設定してgoコマンドを実行すると、「GOTOOLCHAIN=auto」により「goコマンドにバンドルされたバージョン(1.23.0)」と「toolchain directive(1.22.0)」を比較し、
-「goコマンドにバンドルされたバージョン」の方が大きいため、そのバージョンで実行する。
+これは`GOTOOLCHAIN=auto`の場合、「goコマンドにバンドルされたバージョン」と「toolchain directive のバージョン」を比較した結果、
+高い方のバージョンである「goコマンドにバンドルされたバージョン」が採用されるため。
 
+# 動作確認
 ```
 $ go version
 go version go1.23.0 darwin/amd64
