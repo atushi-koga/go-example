@@ -16,18 +16,16 @@ graph TD
     F[go.modのtoolchain行を参照]
     D --> F
     E --> F
-    F -->|toolchain default| G[デフォルトを使用する。\n nameを超える更新を拒否する]
     F -->|toolchain tname| H[tname > default]
-    F -->|toolchain行が無い| I[go version > default]
+    F -->|toolchain行が無い| I[default >= go version]
     H -->|yes| J[tnameを選択]
     H -->|no| K[defaultを選択]
-    I -->|yes| L[versionを使用する]
-    I -->|yes| M[defaultを使用する??]
+    I -->|yes| M[error:toolchain not available???]
+    I -->|yes| L[go versionを使用する]
         
     Z[実行]
     B --> Z
     C --> Z
-    G --> Z
     J --> Z
     K --> Z
     L --> Z
