@@ -2,6 +2,7 @@
 Go1.21から導入された Go Toolchains の動きを確認するためのディレクトリ。
 
 # 実行バージョンの選択
+default とは、バンドルされたGoバージョンを指す。
 
 ```mermaid
 
@@ -20,8 +21,8 @@ graph TD
     F -->|toolchain行が無い| I[default >= go version]
     H -->|yes| J[tnameを選択]
     H -->|no| K[defaultを選択]
-    I -->|yes| M[error:toolchain not available???]
-    I -->|yes| L[go versionを使用する]
+    I -->|yes| L[defaultを使用する]
+    I -->|no| M[error:toolchain not available]
         
     Z[実行]
     B --> Z
@@ -31,7 +32,7 @@ graph TD
     L --> Z
     M --> Z
 
-    class A,B,E,F,H,J,K,Z lightYellow;
+    class A,B,E,F,H,J,K,M,Z lightYellow;
 ```
 
 
