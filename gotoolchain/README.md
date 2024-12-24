@@ -11,7 +11,10 @@ graph TD
     A[GOTOOLCHAIN設定]
     A -->|local| B[バンドルされたツールチェーンを選択]
     A -->|name| C[その特定のツールチェーン。<br>PATHを見て無ければDL]
-    A -->|path or name+path| D[異なるツールチェーンを許可<br>必要に応じて新しいGoバージョンを選択する。<br>**DLはせずに停止する**]
+    C --> N[name > go directive]
+    N -->|yes| O[nameを選択]
+    N -->|no| P[go directive未満のためエラー]
+    A -->|path or name+path| D[異なるツールチェーンを許可<br>必要に応じて新しいGoバージョンを選択する。<br>**DLはせずに停止する**←これがautoとの違いぽい。後続のフローにも違いが出そう]
     A -->|auto or name+auto| E[異なるツールチェーンを許可<br>必要に応じて新しいGoバージョンを選択する。<br>**DLする**]
 
     F[go.modのtoolchain行を参照]
@@ -26,13 +29,13 @@ graph TD
         
     Z[実行]
     B --> Z
-    C --> Z
     J --> Z
     K --> Z
     L --> Z
     M --> Z
+    O --> Z
 
-    class A,B,E,F,H,I,J,K,L,M,Z lightYellow;
+    class A,B,C,E,F,H,I,J,K,L,M,N,O,P lightYellow;
 ```
 
 
