@@ -1,5 +1,5 @@
 # 概要
-下記の値を設定してgoコマンドを実行すると、「go.mod requires go >= 1.23」エラーになる。
+下記の値を設定してgo buildコマンドを実行すると、「go.mod requires go >= 1.23」エラーになる。
 
 - GOTOOLCHAIN:go1.22.0
 - ローカルにインストールしたGoバージョン:1.21.0
