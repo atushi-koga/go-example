@@ -12,8 +12,8 @@ classDef lightYellow fill:#FFFFE0,stroke:#000,stroke-width:2px,color:#000;
 A[GOTOOLCHAIN設定]
 A -->|local| B[指定バージョン=バンドルされたバージョン]
 A -->|name| C[指定したバージョンが PATH になければ DL]
-A -->|path or name+path| D[**DLはせずに停止する**←これがautoとの違いぽい。後続のフローにも違いが出そう]
-A -->|auto or name+auto| E[**DLする**]
+A -->|path or name+path| F
+A -->|auto or name+auto| F
 
 subgraph Group1 [指定したバージョンのみ実行]
     B
@@ -27,22 +27,23 @@ end
 %% サブグラフでDとEから派生するノードを囲む
 subgraph Group2 [必要に応じてGoバージョンを選択]
     F[go.modのtoolchain行を参照]
-    D --> F
-    E --> F
     F -->|toolchain tname| H[tname > default]
     F -->|toolchain行が無い| I[default >= go version]
-    H -->|yes| J[tnameを選択]
+    H -->|yes| Q[tnameを選択<br>PATHにあるか]
+    Q -->|no| S[GOTOOLCHAIN設定]
+    S -->|auto or name+auto| V[tnameをDLする]
+    S -->|path or name+path| R[エラー]
     H -->|no| K[defaultを選択]
     I -->|yes| L[defaultを使用する]
     I -->|no| M[error:toolchain not available]
 end
 
 Z[実行]
-J --> Z
+Q -->|yes| Z
 K --> Z
 L --> Z
-M --> Z
 O --> Z
+V --> Z
 
 class A,B,C,E,F,H,I,J,K,L,M,N,O,P lightYellow;
 ```
