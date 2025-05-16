@@ -7,3 +7,7 @@ install:
 # 以下のコマンドは、動作確認可能なディレクトリである gotoolchain/path/path 配下のコードに対して実行する例
 analyze:
 	cd ../../gotoolchain/path/path && go vet -vettool=`which restrict` ./...
+
+# 静的解析のテストコードを実行する
+test:
+	go test ./...
