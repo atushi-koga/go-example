@@ -75,6 +75,8 @@ func run(pass *analysis.Pass) (interface{}, error) {
 	return nil, nil
 }
 
+// restrictedFuncs コマンドラインからのフラグ指定（文字列）を実際の解析可能な形式（*types.Func）に変換して返している
+// これにより、この関数のクライアント側で指定した関数・メソッドが呼び出されているかどうか検出できるようにしている。
 func restrictedFuncs(pass *analysis.Pass, names string) []*types.Func {
 	var fs []*types.Func
 	for _, fn := range strings.Split(names, ",") {
@@ -91,6 +93,7 @@ func restrictedFuncs(pass *analysis.Pass, names string) []*types.Func {
 			continue
 		}
 
+		// pkgname.Func 形式で該当するものがなければスキップ
 		if len(ss) < 3 {
 			continue
 		}

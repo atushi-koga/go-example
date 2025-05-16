@@ -1,0 +1,63 @@
+---
+description: 
+globs: staticanalysis/called/**/*.*
+alwaysApply: false
+---
+# ディレクトリルール
+このディレクトリに適用されるルールを以下に記載します。
+
+# プロジェクト概要
+Go で書かれたコードに対して、指定した特定パッケージのメソッドを使っている場合にエラーを検出する静的解析ツールです。
+
+# 使い方
+次のような Go コードを用意します。
+
+```go
+package main
+
+import "log"
+
+func main() {
+	log.Fatal("hoge")
+}
+```
+
+`-called.funcs`に検出したいパッケージメソッドを指定し、次のように実行します。
+すると、使用している箇所が検出されます。
+
+```
+$ go vet -vettool=`which called` -called.funcs="log.Fatal" main.go
+./main.go:6:11: log.Fatal must not be called
+```
+
+### エラーの抑制
+
+```go
+package main
+
+import "log"
+
+func main() {
+	//lint:ignore called reason
+	log.Fatal("hoge")
+}
+```
+
+上記のように `//lint:ignore called` が付けられたノードを無視します。
+無視コメントには、アナライザー名とチェックを無視する理由が含まれます。
+
+## 既知の不具合
+インポートパスに「.」が含まれている場合、正しく動作しない。
+
+## 既知の不具合（cursor）提案
+1. **インデックスアウトオブレンジのリスク**：
+   `restrictedFuncs`関数内の条件式 `pkgname != "" && pkgname[0] == '*'` において、`pkgname`が空文字列でない場合でも長さが0の場合に`pkgname[0]`にアクセスするとパニックが発生します。正しくは `len(pkgname) > 0 && pkgname[0] == '*'` とするべきです。
+
+2. **カンマ区切りの処理の問題**：
+   関数名をカンマで分割する処理において、末尾がカンマで終わる場合（例：`log.Fatal,`）に空の関数名としてループが実行され、リソースが無駄に消費される可能性があります。
+
+3. **パッケージパスの解析制限**：
+   関数名をドット（`.`）で分割する実装により、サブパッケージを含む複雑なパス（例：`github.com/pkg/errors.New`）を正しく解析できません。
+
+4. **空白文字のみのフラグの処理**：
+   `flagFuncs`が空文字列の場合は早期リターンしますが、空白文字だけの場合は不正な形式として検出される可能性があります。
