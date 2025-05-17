@@ -3,8 +3,6 @@ package restrict
 import (
 	"fmt"
 	"go/ast"
-	"os"
-
 	"golang.org/x/tools/go/analysis"
 )
 
@@ -20,16 +18,24 @@ func run(pass *analysis.Pass) (interface{}, error) {
 	// pass.Files に解析対象のソースコードファイルが格納されている
 	for _, file := range pass.Files {
 		// ASTノードの構造を出力する
-		fmt.Print("--- AST Structure ---")
+		//fmt.Print("--- AST Structure ---")
 		// 出力形式は Go AST Viewer(https://yuroyoro.github.io/goast-viewer/) と同じ
-		err := ast.Print(pass.Fset, file)
-		if err != nil {
-			// エラーハンドリング (例: ログに出力)
-			fmt.Fprintf(os.Stderr, "Error printing AST: %v\n", err)
-		}
-		fmt.Println("---------------------")
+		//err := ast.Print(pass.Fset, file)
+		//if err != nil {
+		//	fmt.Fprintf(os.Stderr, "Error printing AST: %v\n", err)
+		//}
+		//fmt.Println("---------------------")
 
+		// 深さ優先探索でファイル内の各ノードにアクセスしてこのクロージャを実行している
 		ast.Inspect(file, func(n ast.Node) bool {
+			// ast.Node に入るノードを調べる
+			//fmt.Print("--- ast.Node start --- \n")
+			//err2 := ast.Print(pass.Fset, n)
+			//if err2 != nil {
+			//	fmt.Fprintf(os.Stderr, "Error printing AST: %v\n", err2)
+			//}
+			//fmt.Print("--- ast.Node end --- \n")
+
 			// 関数呼び出しか？
 			// CallExpr:関数呼び出しを表す式ノード
 			callExpr, ok := n.(*ast.CallExpr)
