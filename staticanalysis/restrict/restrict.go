@@ -3,6 +3,8 @@ package restrict
 import (
 	"fmt"
 	"go/ast"
+	"os"
+
 	"golang.org/x/tools/go/analysis"
 )
 
@@ -17,7 +19,16 @@ func run(pass *analysis.Pass) (interface{}, error) {
 	fmt.Println("----------start analysis----------")
 	// pass.Files に解析対象のソースコードファイルが格納されている
 	for _, file := range pass.Files {
-		fmt.Printf("package name: %s\n", file.Name.Name)
+		// ASTノードの構造を出力する
+		fmt.Print("--- AST Structure ---")
+		// 出力形式は Go AST Viewer(https://yuroyoro.github.io/goast-viewer/) と同じ
+		err := ast.Print(pass.Fset, file)
+		if err != nil {
+			// エラーハンドリング (例: ログに出力)
+			fmt.Fprintf(os.Stderr, "Error printing AST: %v\n", err)
+		}
+		fmt.Println("---------------------")
+
 		ast.Inspect(file, func(n ast.Node) bool {
 			// 関数呼び出しか？
 			// CallExpr:関数呼び出しを表す式ノード

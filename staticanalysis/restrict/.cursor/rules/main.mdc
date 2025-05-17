@@ -1,0 +1,178 @@
+---
+description: 
+globs: staticanalysis/restrict/**/*.go
+alwaysApply: false
+---
+
+# 静的解析の概要
+
+fmt.Println の使用を検出する静的解析ルール。
+*analysis.Pass.Files の各ファイルに対して次の処理フローを実行している。
+
+```mermaid
+graph TD
+B[*ast.File の処理開始]
+B --> C[File 内の ASTノードを再帰的に走査]
+C --> D{CallExpr型？}
+D -- いいえ --> J[次の File を処理]
+D -- はい --> E{SelectorExpr型？}
+E -- いいえ --> J
+E -- はい --> F{Ident型（パッケージ識別子）を取得可能か}
+F -- いいえ --> J
+F -- はい --> G{fmt.Println？}
+G -- いいえ --> J
+G -- はい --> H[fmt.Println の使用を報告]
+H --> J
+```
+
+# 静的解析のテストコード
+
+"golang.org/x/tools/go/analysis/analysistest"
+
+# ASTサンプル
+次のGoコードがあるとする。
+
+```go
+// package comment
+package main
+
+// import comment
+import (
+	"fmt"
+)
+
+// function comment
+func main() {
+	// function body comment
+	fmt.Println("Hello, Golang\n")
+}
+```
+
+上記を go/ast パッケージで AST を解析すると次のようになる。
+
+```
+0  *ast.File {
+1  .  Doc: *ast.CommentGroup {
+2  .  .  List: []*ast.Comment (len = 1) {
+3  .  .  .  0: *ast.Comment {
+4  .  .  .  .  Slash: ./main.go:1:1
+5  .  .  .  .  Text: "// package comment"
+6  .  .  .  }
+7  .  .  }
+8  .  }
+9  .  Package: ./main.go:2:1
+10  .  Name: *ast.Ident {
+11  .  .  NamePos: ./main.go:2:9
+12  .  .  Name: "main"
+13  .  }
+14  .  Decls: []ast.Decl (len = 2) {
+15  .  .  0: *ast.GenDecl {
+16  .  .  .  Doc: *ast.CommentGroup {
+17  .  .  .  .  List: []*ast.Comment (len = 1) {
+18  .  .  .  .  .  0: *ast.Comment {
+19  .  .  .  .  .  .  Slash: ./main.go:4:1
+20  .  .  .  .  .  .  Text: "// import comment"
+21  .  .  .  .  .  }
+22  .  .  .  .  }
+23  .  .  .  }
+24  .  .  .  TokPos: ./main.go:5:1
+25  .  .  .  Tok: import
+26  .  .  .  Lparen: ./main.go:5:8
+27  .  .  .  Specs: []ast.Spec (len = 1) {
+28  .  .  .  .  0: *ast.ImportSpec {
+29  .  .  .  .  .  Path: *ast.BasicLit {
+30  .  .  .  .  .  .  ValuePos: ./main.go:6:2
+31  .  .  .  .  .  .  Kind: STRING
+32  .  .  .  .  .  .  Value: "\"fmt\""
+33  .  .  .  .  .  }
+34  .  .  .  .  .  EndPos: -
+35  .  .  .  .  }
+36  .  .  .  }
+37  .  .  .  Rparen: ./main.go:7:1
+38  .  .  }
+39  .  .  1: *ast.FuncDecl {
+40  .  .  .  Doc: *ast.CommentGroup {
+41  .  .  .  .  List: []*ast.Comment (len = 1) {
+42  .  .  .  .  .  0: *ast.Comment {
+43  .  .  .  .  .  .  Slash: ./main.go:9:1
+44  .  .  .  .  .  .  Text: "// function comment"
+45  .  .  .  .  .  }
+46  .  .  .  .  }
+47  .  .  .  }
+48  .  .  .  Name: *ast.Ident {
+49  .  .  .  .  NamePos: ./main.go:10:6
+50  .  .  .  .  Name: "main"
+51  .  .  .  .  Obj: *ast.Object {
+52  .  .  .  .  .  Kind: func
+53  .  .  .  .  .  Name: "main"
+54  .  .  .  .  .  Decl: *(obj @ 39)
+55  .  .  .  .  }
+56  .  .  .  }
+57  .  .  .  Type: *ast.FuncType {
+58  .  .  .  .  Func: ./main.go:10:1
+59  .  .  .  .  Params: *ast.FieldList {
+60  .  .  .  .  .  Opening: ./main.go:10:10
+61  .  .  .  .  .  Closing: ./main.go:10:11
+62  .  .  .  .  }
+63  .  .  .  }
+64  .  .  .  Body: *ast.BlockStmt {
+65  .  .  .  .  Lbrace: ./main.go:10:13
+66  .  .  .  .  List: []ast.Stmt (len = 1) {
+67  .  .  .  .  .  0: *ast.ExprStmt {
+68  .  .  .  .  .  .  X: *ast.CallExpr {
+69  .  .  .  .  .  .  .  Fun: *ast.SelectorExpr {
+70  .  .  .  .  .  .  .  .  X: *ast.Ident {
+71  .  .  .  .  .  .  .  .  .  NamePos: ./main.go:12:2
+72  .  .  .  .  .  .  .  .  .  Name: "fmt"
+73  .  .  .  .  .  .  .  .  }
+74  .  .  .  .  .  .  .  .  Sel: *ast.Ident {
+75  .  .  .  .  .  .  .  .  .  NamePos: ./main.go:12:6
+76  .  .  .  .  .  .  .  .  .  Name: "Println"
+77  .  .  .  .  .  .  .  .  }
+78  .  .  .  .  .  .  .  }
+79  .  .  .  .  .  .  .  Lparen: ./main.go:12:13
+80  .  .  .  .  .  .  .  Args: []ast.Expr (len = 1) {
+81  .  .  .  .  .  .  .  .  0: *ast.BasicLit {
+82  .  .  .  .  .  .  .  .  .  ValuePos: ./main.go:12:14
+83  .  .  .  .  .  .  .  .  .  Kind: STRING
+84  .  .  .  .  .  .  .  .  .  Value: "\"Hello, Golang\\n\""
+85  .  .  .  .  .  .  .  .  }
+86  .  .  .  .  .  .  .  }
+87  .  .  .  .  .  .  .  Ellipsis: -
+88  .  .  .  .  .  .  .  Rparen: ./main.go:12:31
+89  .  .  .  .  .  .  }
+90  .  .  .  .  .  }
+91  .  .  .  .  }
+92  .  .  .  .  Rbrace: ./main.go:13:1
+93  .  .  .  }
+94  .  .  }
+95  .  }
+96  .  FileStart: ./main.go:1:1
+97  .  FileEnd: ./main.go:13:3
+98  .  Scope: *ast.Scope {
+99  .  .  Objects: map[string]*ast.Object (len = 1) {
+100  .  .  .  "main": *(obj @ 51)
+101  .  .  }
+102  .  }
+103  .  Imports: []*ast.ImportSpec (len = 1) {
+104  .  .  0: *(obj @ 28)
+105  .  }
+106  .  Unresolved: []*ast.Ident (len = 1) {
+107  .  .  0: *(obj @ 70)
+108  .  }
+109  .  Comments: []*ast.CommentGroup (len = 4) {
+110  .  .  0: *(obj @ 1)
+111  .  .  1: *(obj @ 16)
+112  .  .  2: *(obj @ 40)
+113  .  .  3: *ast.CommentGroup {
+114  .  .  .  List: []*ast.Comment (len = 1) {
+115  .  .  .  .  0: *ast.Comment {
+116  .  .  .  .  .  Slash: ./main.go:11:2
+117  .  .  .  .  .  Text: "// function body comment"
+118  .  .  .  .  }
+119  .  .  .  }
+120  .  .  }
+121  .  }
+122  .  GoVersion: ""
+123  }
+```
