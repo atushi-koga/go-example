@@ -41,7 +41,9 @@ package "Stmt: 文を表すノード" {
   class DeclStmt
   class EmptyStmt
   class LabeledStmt
-  class ExprStmt
+  class ExprStmt {
+    X : Expr
+  }
   class SendStmt
   class IncDecStmt
   class AssignStmt
