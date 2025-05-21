@@ -1,0 +1,9 @@
+@startuml
+skinparam direction top to bottom
+
+package "Packageノード" as PPackage {
+  class Package
+}
+' PPackage --> NodePkg // 依存関係ファイルで定義
+
+@enduml 

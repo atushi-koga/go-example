@@ -1,0 +1,8 @@
+@startuml
+skinparam direction top to bottom
+
+package "Node" as NodePkg {
+  interface Node
+}
+
+@enduml 

@@ -1,0 +1,12 @@
+@startuml
+skinparam direction top to bottom
+
+package "リテラルを表すノード" as PLiteral {
+  class BasicLit_Literal
+  class FuncLit_Literal
+  class CompositeLit
+}
+' PLiteral --> PExpr // 依存関係ファイルで定義
+' PLiteral --> NodePkg // 依存関係ファイルで定義
+
+@enduml 

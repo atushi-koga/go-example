@@ -1,0 +1,16 @@
+@startuml
+skinparam direction top to bottom
+
+package "Spec: 宣言の詳細を表すノード" {
+  interface Spec
+  ' NodePkg::Node <|-- Spec // 依存関係ファイルで定義
+
+  class ImportSpec
+  class ValueSpec
+  class TypeSpec
+  Spec <|-- ImportSpec
+  Spec <|-- ValueSpec
+  Spec <|-- TypeSpec
+}
+
+@enduml 

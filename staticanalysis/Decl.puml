@@ -1,0 +1,17 @@
+@startuml
+skinparam direction top to bottom
+
+package "Decl: 宣言を表すノード" {
+  interface Decl
+  ' NodePkg::Node <|-- Decl // 依存関係ファイルで定義
+
+  class BadDecl
+  note right of BadDecl : 1 +
+  class GenDecl
+  class FuncDecl
+  Decl <|-- BadDecl
+  Decl <|-- GenDecl
+  Decl <|-- FuncDecl
+}
+
+@enduml 

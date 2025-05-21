@@ -1,0 +1,10 @@
+@startuml
+skinparam direction top to bottom
+
+package "コメントノード" as PComment {
+  class Comment
+  class CommentGroup
+}
+' PComment --> NodePkg // 依存関係ファイルで定義
+
+@enduml 

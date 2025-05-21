@@ -1,0 +1,32 @@
+@startuml
+skinparam direction top to bottom
+
+' パッケージの空定義 (ファイル名昇順)
+package "Case" as PCase {}
+package "Comment" as PComment {}
+package "Decl" as DeclPkg {}
+package "Expr" as PExpr {}
+package "Field" as PField {}
+package "File" as PFile {}
+package "Literal" as PLiteral {}
+package "Node" as NodePkg {}
+package "Package" as PPackage {}
+package "Spec" as SpecPkg {}
+package "Stmt" as StmtPkg {}
+package "TypeLit" as PTypeLit {}
+
+' パッケージ間の依存関係 (依存元のアルファベット順)
+PCase ..> NodePkg
+PComment ..> NodePkg
+DeclPkg ..> NodePkg
+PExpr ..> NodePkg
+PField ..> NodePkg
+PFile ..> NodePkg
+PLiteral ..> PExpr
+PLiteral ..> NodePkg
+PPackage ..> NodePkg
+SpecPkg ..> NodePkg
+StmtPkg ..> NodePkg
+PTypeLit ..> NodePkg
+
+@enduml 

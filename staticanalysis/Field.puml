@@ -1,0 +1,10 @@
+@startuml
+skinparam direction top to bottom
+
+package "フィールドノード" as PField {
+  class Field
+  class FieldList
+}
+' PField --> NodePkg // 依存関係ファイルで定義
+
+@enduml 

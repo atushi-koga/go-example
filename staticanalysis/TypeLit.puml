@@ -1,0 +1,20 @@
+@startuml
+skinparam direction top to bottom
+
+package "型リテラルを表すノード" as PTypeLit {
+  class ArrayType
+  note right of ArrayType : [3]int
+  class StructType
+  note right of StructType : struct{X int; Y string}
+  class FuncType
+  note right of FuncType : func(x int) string
+  class InterfaceType
+  note right of InterfaceType : interface{Method() int}
+  class MapType
+  note right of MapType : map[string]int
+  class ChanType
+  note right of ChanType : chan int
+}
+' PTypeLit --> NodePkg // 依存関係ファイルで定義
+
+@enduml 

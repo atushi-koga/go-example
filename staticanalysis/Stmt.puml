@@ -1,0 +1,69 @@
+@startuml
+skinparam direction top to bottom
+
+package "Stmt: 文を表すノード" {
+  interface Stmt
+  ' NodePkg::Node <|-- Stmt // 依存関係ファイルで定義
+
+  class BadStmt
+  note right of BadStmt : 1 +
+  class DeclStmt
+  note right of DeclStmt : const a = 1
+  class EmptyStmt
+  note right of EmptyStmt : ;
+  class LabeledStmt
+  note right of LabeledStmt : label: fmt.Println("test")
+  class ExprStmt {
+    X : Expr
+  }
+  note right of ExprStmt : fmt.Println("Hello")
+  class SendStmt
+  note right of SendStmt : ch <- 42
+  class IncDecStmt
+  note right of IncDecStmt : x++
+  class AssignStmt
+  note right of AssignStmt : err = fmt.Fprintf(nil, ...)
+  class GoStmt
+  note right of GoStmt : go fmt.Println("goroutine")
+  class DeferStmt
+  note right of DeferStmt : defer fmt.Println("deferred")
+  class ReturnStmt
+  note right of ReturnStmt : return fmt.Fprintf(nil, ...)
+  class BranchStmt
+  note right of BranchStmt : break
+  class BlockStmt
+  note right of BlockStmt : { fmt.Println("inside block") }
+  class IfStmt
+  note right of IfStmt : if x > 0 { fmt.Println("positive") }
+  class SwitchStmt
+  note right of SwitchStmt : switch x { case 1: fmt.Println("one") }
+  class TypeSwitchStmt
+  note right of TypeSwitchStmt : switch x.(type) { case int: fmt.Println("int") }
+  class SelectStmt
+  note right of SelectStmt : select { case <-ch: fmt.Println("received") }
+  class ForStmt
+  note right of ForStmt : for i := 0; i < 10; i++ { fmt.Println(i) }
+  class RangeStmt
+  note right of RangeStmt : for k, v := range m { fmt.Println(k, v) }
+  Stmt <|-- BadStmt
+  Stmt <|-- DeclStmt
+  Stmt <|-- EmptyStmt
+  Stmt <|-- LabeledStmt
+  Stmt <|-- ExprStmt
+  Stmt <|-- SendStmt
+  Stmt <|-- IncDecStmt
+  Stmt <|-- AssignStmt
+  Stmt <|-- GoStmt
+  Stmt <|-- DeferStmt
+  Stmt <|-- ReturnStmt
+  Stmt <|-- BranchStmt
+  Stmt <|-- BlockStmt
+  Stmt <|-- IfStmt
+  Stmt <|-- SwitchStmt
+  Stmt <|-- TypeSwitchStmt
+  Stmt <|-- SelectStmt
+  Stmt <|-- ForStmt
+  Stmt <|-- RangeStmt
+}
+
+@enduml

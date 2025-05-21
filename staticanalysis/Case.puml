@@ -1,0 +1,10 @@
+@startuml
+skinparam direction top to bottom
+
+package "caseノード" as PCase {
+  class CaseClause
+  class CommClause
+}
+' PCase --> NodePkg // 依存関係ファイルで定義
+
+@enduml 
