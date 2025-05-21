@@ -9,7 +9,10 @@ package "Expr: 式を表すノード" as PExpr {
   note right of BadExpr : 1 +
   class ParenExpr
   note right of ParenExpr : (x + y)
-  class SelectorExpr
+  class SelectorExpr {
+    X : Expr
+    Sel : *Ident
+  }
   note right of SelectorExpr : v.M
   class IndexExpr
   note right of IndexExpr : arr[0]
@@ -19,7 +22,9 @@ package "Expr: 式を表すノード" as PExpr {
   note right of SliceExpr : slice[1:3]
   class TypeAssertExpr
   note right of TypeAssertExpr : x.(int)
-  class CallExpr
+  class CallExpr {
+    Fun : Expr
+  }
   note right of CallExpr : f(1, 2, 3)
   class StarExpr
   note right of StarExpr : *ptr

@@ -31,7 +31,9 @@ package "Stmt: 文を表すノード" {
   note right of ReturnStmt : return fmt.Fprintf(nil, ...)
   class BranchStmt
   note right of BranchStmt : break
-  class BlockStmt
+  class BlockStmt {
+    List : []Stmt
+  }
   note right of BlockStmt : { fmt.Println("inside block") }
   class IfStmt
   note right of IfStmt : if x > 0 { fmt.Println("positive") }
