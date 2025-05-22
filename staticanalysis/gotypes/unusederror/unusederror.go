@@ -31,8 +31,10 @@ func run(pass *analysis.Pass) (interface{}, error) {
 				return true
 			}
 
-			// 呼び出している関数そのもの（例: fmt.Fprintln）を解析
-			// ObjectOf に渡すのは関数識別子（SelectorExprやIdent）
+			// 呼び出している関数を解析
+			// ObjectOf に渡すのは次の関数識別子
+			// SelectorExpr:メソッドやパッケージ関数(ex. fmt.Println)
+			// Ident:ユーザ定義関数（ex. some()）
 			var obj types.Object
 			switch fun := callExpr.Fun.(type) {
 			case *ast.Ident:
@@ -48,6 +50,8 @@ func run(pass *analysis.Pass) (interface{}, error) {
 				return true
 			}
 
+			// Signature は（非組み込みの）関数またはメソッド型を表します。
+			// sig には関数のシグネチャ情報が代入される
 			sig, ok := obj.Type().Underlying().(*types.Signature)
 			if !ok {
 				return true
@@ -56,6 +60,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 
 			results := sig.Results()
 			for i := 0; i < results.Len(); i++ {
+				// 戻り値の型が error 型と同じかどうかをチェック
 				if types.Identical(results.At(i).Type(), errorType) {
 					pass.Reportf(callExpr.Lparen, "function returns error, but result is ignored")
 					break
