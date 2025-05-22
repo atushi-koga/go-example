@@ -9,6 +9,7 @@ package "Stmt: 文を表すノード" {
   note right of BadStmt : 1 +
   class DeclStmt
   note right of DeclStmt : const a = 1
+  note right of DeclStmt : var x int
   class EmptyStmt
   note right of EmptyStmt : ;
   class LabeledStmt

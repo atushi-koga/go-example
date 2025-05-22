@@ -15,6 +15,7 @@ var Analyzer = &analysis.Analyzer{
 }
 
 func run(pass *analysis.Pass) (interface{}, error) {
+	//  error 型の情報は types.Universe という組み込み型の定義が保持されている types.Scope から取得することができます
 	errorType := types.Universe.Lookup("error").Type()
 	fmt.Printf("errorType: %T\n", errorType)
 

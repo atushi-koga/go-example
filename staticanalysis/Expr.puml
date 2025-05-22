@@ -24,6 +24,7 @@ package "Expr: 式を表すノード" as PExpr {
   note right of TypeAssertExpr : x.(int)
   class CallExpr {
     Fun : Expr
+    Args : []Expr
   }
   note right of CallExpr : f(1, 2, 3)
   class StarExpr

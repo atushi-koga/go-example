@@ -17,6 +17,7 @@ var Analyzer = &analysis.Analyzer{
 func run(pass *analysis.Pass) (interface{}, error) {
 	for _, file := range pass.Files {
 		ast.Inspect(file, func(n ast.Node) bool {
+			// キャストは関数呼び出しのため、ast.CallExpr ノードを検索する
 			callExpr, ok := n.(*ast.CallExpr)
 			if !ok {
 				return true
